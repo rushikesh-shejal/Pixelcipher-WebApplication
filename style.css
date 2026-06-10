@@ -1,0 +1,96 @@
+:root {
+    --bg-color: #F0F2F5;
+    --app-bg-color: #ffffff;
+    --text-color: #4a5568;
+    --heading-color: #2d3748;
+    --input-border: #e2e8f0;
+    --input-bg: #ffffff;
+    --preview-border: #93c5fd;
+    --preview-bg: #eff6ff;
+    --preview-hover-bg: #dbeafe;
+    --frame-bg: #f8fafc;
+    --frame-border: #e2e8f0;
+}
+
+[data-theme="dark"] {
+    --bg-color: #1a202c;
+    --app-bg-color: #2d3748;
+    --text-color: #e2e8f0;
+    --heading-color: #ffffff;
+    --input-border: #4a5568;
+    --input-bg: #4a5568;
+    --preview-border: #4299e1;
+    --preview-bg: #2d3748;
+    --preview-hover-bg: #4a5568;
+    --frame-bg: #2d3748;
+    --frame-border: #4a5568;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-color);
+    background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    color: var(--text-color);
+}
+[data-theme="dark"] body {
+    background-image: none;
+}
+.app-container {
+    background-color: var(--app-bg-color);
+    border-radius: 2rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    border: 1px solid var(--frame-border);
+}
+h2, h3, h1 {
+    color: var(--heading-color);
+}
+.btn-primary {
+    background-image: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
+}
+.btn-primary:hover {
+    box-shadow: 0 4px 15px 0 rgba(100, 115, 201, 0.75);
+}
+.btn-secondary {
+    background-image: linear-gradient(to right, #00d2ff 0%, #3a7bd5 100%);
+}
+.btn-secondary:hover {
+    box-shadow: 0 4px 15px 0 rgba(58, 123, 213, 0.75);
+}
+.btn-neutral {
+    background-color: var(--frame-border);
+    color: var(--heading-color);
+}
+.btn-neutral:hover {
+    background-color: #e2e8f0;
+}
+[data-theme="dark"] .btn-neutral {
+    background-color: #4a5568;
+    color: #e2e8f0;
+}
+[data-theme="dark"] .btn-neutral:hover {
+    background-color: #6a7489;
+}
+
+input, textarea {
+    border: 1px solid var(--input-border);
+    background-color: var(--input-bg);
+    color: var(--text-color);
+}
+input:focus, textarea:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+.image-preview {
+    border: 2px dashed var(--preview-border);
+    background-color: var(--preview-bg);
+}
+.image-preview:hover {
+    background-color: var(--preview-hover-bg);
+}
+.logout-delete-frame {
+    border: 1px solid var(--frame-border);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+    background-color: var(--frame-bg);
+}
