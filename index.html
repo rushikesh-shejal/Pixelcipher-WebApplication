@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PixelCipher - Web</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="stylesheet" href="style.css">
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+            emailjs.init("Private_Key"); 
+        })();
+    </script>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <div id="app-container" class="app-container w-full max-w-xl mx-auto p-8">
+
+        <div class="flex flex-col items-center mb-10">
+            <div class="h-24 w-24 flex items-center justify-center mb-4 rounded-full bg-gradient-to-tr from-purple-500 to-blue-500 p-2 shadow-lg">
+                <img src="pixelcipher.jpg" alt="PixelCipher Logo" class="h-full w-full object-contain rounded-full">
+            </div>
+            <h1 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-600">PixelCipher</h1>
+            <p class="text-md font-medium mt-2 text-gray-500">Secure Image Steganography</p>
+            <button id="theme-toggle" class="mt-4 px-4 py-2 rounded-full text-sm font-bold bg-gray-200 text-gray-800 hover:bg-gray-300">
+                Switch to Dark Mode
+            </button>
+        </div>
+
+        <div id="content-area">
+
+            <div id="login-frame" class="space-y-6">
+                <h2 class="text-2xl font-bold text-center">Login to your account</h2>
+                <div>
+                    <label for="login-username" class="block text-sm font-medium">Username</label>
+                    <input type="text" id="login-username" placeholder="Enter your username" class="mt-1 block w-full rounded-md shadow-sm sm:text-sm p-3">
+                </div>
+                <div>
+                    <label for="login-password" class="block text-sm font-medium">Password</label>
+                    <input type="password" id="login-password" placeholder="Enter your password" class="mt-1 block w-full rounded-md shadow-sm sm:text-sm p-3">
+                </div>
+                <button onclick="login()" class="w-full flex justify-center py-3 px-4 border-transparent rounded-full shadow-lg text-sm font-bold text-white btn-primary">
+                    Login
+                </button>
+                <div class="text-center text-sm mt-4">
+                    Don't have an account? <a href="#" onclick="showRegisterFrame()" class="font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-600">Register now</a>
+                </div>
+                <div id="login-error" class="text-red-500 text-sm text-center font-medium mt-2"></div>
+            </div>
+
+            <div id="register-frame" class="hidden space-y-6">
+                <h2 class="text-2xl font-bold text-center">Create a new account</h2>
+                <div>
+                    <label for="reg-username" class="block text-sm font-medium">Username</label>
+                    <input type="text" id="reg-username" placeholder="Choose a username" class="mt-1 block w-full rounded-md shadow-sm sm:text-sm p-3">
+                </div>
+                <div>
+                    <label for="reg-email" class="block text-sm font-medium">Email</label>
+                    <input type="email" id="reg-email" placeholder="Enter your email" class="mt-1 block w-full rounded-md shadow-sm sm:text-sm p-3">
+                </div>
+                <div>
+                    <label for="reg-password" class="block text-sm font-medium">Password</label>
+                    <input type="password" id="reg-password" placeholder="Create a password" class="mt-1 block w-full rounded-md shadow-sm sm:text-sm p-3">
+                    <div id="password-strength-reg" class="text-xs mt-1"></div>
+                </div>
+                <div>
+                    <label for="reg-confirm" class="block text-sm font-medium">Confirm Password</label>
+                    <input type="password" id="reg-confirm" placeholder="Confirm your password" class="mt-1 block w-full rounded-md shadow-sm sm:text-sm p-3">
+                </div>
+                <button onclick="register()" class="w-full flex justify-center py-3 px-4 border-transparent rounded-full shadow-lg text-sm font-bold text-white btn-primary">
+                    Register
+                </button>
+                <div class="text-center text-sm mt-4">
+                    Already have an account? <a href="#" onclick="showLoginFrame()" class="font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-600">Login</a>
+                </div>
+                <div id="register-error" class="text-red-500 text-sm text-center font-medium mt-2"></div>
+            </div>
+
+            <div id="dashboard-frame" class="hidden text-center">
+                <h2 id="welcome-message" class="text-3xl font-bold mb-8"></h2>
+                
+                <div class="bg-gray-100 dark:bg-gray-700 rounded-lg p-6 mb-8 text-left">
+                    <h3 class="text-xl font-semibold mb-4 text-gray-700 dark:text-gray-300">Your Activity</h3>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-gray-600 dark:text-gray-400">Images Encoded:</span>
+                        <span id="encoded-count" class="font-bold text-lg text-blue-600">0</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600 dark:text-gray-400">Images Decoded:</span>
+                        <span id="decoded-count" class="font-bold text-lg text-blue-600">0</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <button onclick="showEncodeFrame()" class="w-full py-4 px-6 rounded-xl shadow-md text-base font-bold text-white btn-primary">
+                        Encode Text in Image
+                    </button>
+                    <button onclick="showDecodeFrame()" class="w-full py-4 px-6 rounded-xl shadow-md text-base font-bold text-white btn-secondary">
+                        Decode Text from Image
+                    </button>
+                </div>
+                
+                <button onclick="showAccountFrame()" class="w-full mt-4 py-3 px-4 rounded-full text-sm font-bold btn-neutral">
+                    My Account
+                </button>
+                
+                <button onclick="logout()" class="w-full mt-4 py-3 px-4 rounded-full text-sm font-bold text-gray-600 border border-gray-300 bg-gray-100 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-700">
+                    Logout
+                </button>
+            </div>
+            
+            <div id="account-frame" class="hidden space-y-6 text-center">
+                <h2 class="text-2xl font-bold">Account Settings</h2>
+                <div class="bg-gray-100 dark:bg-gray-700 rounded-lg p-6 text-left">
+                    <h3 class="text-xl font-semibold mb-4 text-gray-700 dark:text-gray-300">Change Password</h3>
+                    <div>
+                        <label for="current-password" class="block text-sm font-medium">Current Password</label>
+                        <input type="password" id="current-password" class="mt-1 block w-full rounded-md shadow-sm sm:text-sm p-3">
+                    </div>
+                    <div class="mt-4">
+                        <label for="new-password" class="block text-sm font-medium">New Password</label>
+                        <input type="password" id="new-password" class="mt-1 block w-full rounded-md shadow-sm sm:text-sm p-3">
+                        <div id="password-strength-change" class="text-xs mt-1"></div>
+                    </div>
+                    <div class="mt-4">
+                        <label for="confirm-new-password" class="block text-sm font-medium">Confirm New Password</label>
+                        <input type="password" id="confirm-new-password" class="mt-1 block w-full rounded-md shadow-sm sm:text-sm p-3">
+                    </div>
+                    <button onclick="changePassword()" class="w-full mt-6 py-3 px-4 rounded-full shadow-lg text-sm font-bold text-white btn-primary">
+                        Change Password
+                    </button>
+                    <div id="password-change-error" class="text-red-500 text-sm text-center font-medium mt-2"></div>
+                </div>
+
+                <div class="logout-delete-frame bg-gray-100 dark:bg-gray-700 border-gray-200 dark:border-gray-600">
+                    <h3 class="text-xl font-semibold mb-4 text-gray-700 dark:text-gray-300">Danger Zone</h3>
+                    <button onclick="confirmDelete()" class="w-full py-3 px-4 rounded-full text-sm font-bold text-red-600 border border-red-300 bg-red-100 hover:bg-red-200 dark:bg-red-900 dark:text-red-300 dark:border-red-600 dark:hover:bg-red-800">
+                        Delete My Account
+                    </button>
+                </div>
+                
+                <button onclick="showDashboardFrame()" class="w-full mt-4 py-3 px-4 rounded-full text-sm font-bold btn-neutral">
+                    Back to Dashboard
+                </button>
+            </div>
+
+            <div id="admin-dashboard-frame" class="hidden text-center">
+                <h2 class="text-3xl font-bold mb-8">Admin Dashboard</h2>
+                <div id="user-list-view" class="bg-gray-100 dark:bg-gray-700 rounded-lg p-6 mb-8 text-left">
+                    <h3 class="text-xl font-semibold mb-4 text-gray-700 dark:text-gray-300">All User Accounts</h3>
+                    <ul id="user-list">
+                        </ul>
+                </div>
+
+                <div id="user-stats-view" class="hidden bg-gray-100 dark:bg-gray-700 rounded-lg p-6 mb-8 text-left">
+                    <h3 class="text-xl font-semibold mb-4 text-gray-700 dark:text-gray-300">Account Activity for <span id="current-user-stats-name"></span></h3>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-gray-600 dark:text-gray-400">Images Encoded:</span>
+                        <span id="admin-encoded-count" class="font-bold text-lg text-blue-600">0</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600 dark:text-gray-400">Images Decoded:</span>
+                        <span id="admin-decoded-count" class="font-bold text-lg text-blue-600">0</span>
+                    </div>
+                    <button onclick="showAdminUserList()" class="w-full mt-6 py-3 px-4 rounded-full text-sm font-bold btn-neutral">
+                        Back to User List
+                    </button>
+                </div>
+
+                <button onclick="logout()" class="mt-8 text-sm font-medium text-gray-500 hover:text-gray-700">
+                    Logout
+                </button>
+            </div>
+
+            <div id="encode-frame" class="hidden space-y-6">
+                <h2 class="text-2xl font-bold text-center">Encode Text</h2>
+                <input type="file" id="encode-image-input" accept="image/png" class="block w-full text-sm text-gray-500 file:mr-4 file:py-3 file:px-6 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 cursor-pointer">
+                <div id="image-preview" class="image-preview w-full h-48 rounded-md flex items-center justify-center text-gray-400 overflow-hidden">
+                    <p class="text-center">No image selected</p>
+                </div>
+                <div class="grid grid-cols-2 gap-4 text-sm font-medium text-gray-600 dark:text-gray-400">
+                    <div class="flex flex-col items-center">
+                        <span>File Size:</span>
+                        <span id="file-size" class="font-bold text-gray-800 dark:text-gray-200">0 KB</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <span>Message Capacity:</span>
+                        <span id="message-capacity" class="font-bold text-gray-800 dark:text-gray-200">0 KB</span>
+                    </div>
+                </div>
+                <div>
+                    <label for="encode-text-input" class="block text-sm font-medium">Text to Hide</label>
+                    <textarea id="encode-text-input" rows="4" class="mt-1 block w-full rounded-md shadow-sm sm:text-sm p-3" placeholder="Enter the secret message..."></textarea>
+                    <div class="flex justify-between text-xs mt-1">
+                        <span id="message-size">Current Message Size: 0 B</span>
+                        <span id="capacity-warning" class="text-red-500 hidden">Message is too large!</span>
+                    </div>
+                </div>
+                <div>
+                    <label for="encode-key-input" class="block text-sm font-medium">Encryption Key</label>
+                    <input type="password" id="encode-key-input" class="mt-1 block w-full rounded-md shadow-sm sm:text-sm p-3" placeholder="Choose a strong key">
+                </div>
+                <div class="grid grid-cols-3 gap-2">
+                    <button onclick="encode()" class="w-full py-3 px-4 rounded-full shadow-lg text-sm font-bold text-white btn-primary">
+                        Encode
+                    </button>
+                    <button id="download-encoded-btn" onclick="downloadEncodedImage()" class="w-full py-3 px-4 rounded-full shadow-lg text-sm font-bold text-white btn-secondary disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                        Download
+                    </button>
+                    <button onclick="showDashboardFrame()" class="w-full py-3 px-4 rounded-full shadow-lg text-sm font-bold btn-neutral">
+                        Back
+                    </button>
+                </div>
+                <canvas id="stegano-canvas" class="hidden"></canvas>
+            </div>
+
+            <div id="decode-frame" class="hidden space-y-6">
+                <h2 class="text-2xl font-bold text-center">Decode Text</h2>
+                <input type="file" id="decode-image-input" accept="image/png" class="block w-full text-sm text-gray-500 file:mr-4 file:py-3 file:px-6 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 cursor-pointer">
+                <div id="decode-image-preview" class="image-preview w-full h-48 rounded-md flex items-center justify-center text-gray-400 overflow-hidden">
+                    <p class="text-center">No image selected</p>
+                </div>
+                <div>
+                    <label for="decode-key-input" class="block text-sm font-medium">Decryption Key</label>
+                    <input type="password" id="decode-key-input" class="mt-1 block w-full rounded-md shadow-sm sm:text-sm p-3" placeholder="Enter the key">
+                </div>
+                <div>
+                    <label for="decoded-text-output" class="block text-sm font-medium">Hidden Text</label>
+                    <textarea id="decoded-text-output" rows="4" class="mt-1 block w-full rounded-md shadow-sm focus:outline-none sm:text-sm p-3 resize-none" readonly placeholder="Decoded text will appear here..."></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="decode()" class="w-full py-3 px-4 rounded-full shadow-lg text-sm font-bold text-white btn-primary">
+                        Decode
+                    </button>
+                    <button onclick="showDashboardFrame()" class="w-full py-3 px-4 rounded-full shadow-lg text-sm font-bold btn-neutral">
+                        Back
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="message-box" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center p-4 z-50">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 w-full max-w-sm text-center">
+            <h3 id="message-title" class="text-2xl font-bold mb-2 text-gray-800 dark:text-gray-200"></h3>
+            <p id="message-body" class="text-gray-600 dark:text-gray-400 mb-6"></p>
+            <button onclick="closeMessageBox()" class="w-full py-3 px-4 rounded-full text-sm font-bold text-white btn-primary">
+                OK
+            </button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
